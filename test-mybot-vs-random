@@ -1,0 +1,2 @@
+#!/bin/bash
+java -jar engine/Tron.jar maps/empty-room.txt "python MyTronBot.py" "java -jar example_bots/RandomBot.jar"
