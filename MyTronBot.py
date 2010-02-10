@@ -3,10 +3,11 @@
 """Template for your tron bot"""
 import random
 import logging
+from socket import gethostname
 
+import sys
+sys.path.append("src/")
 from cerebron import tron
-from cerebron import xmpplogger
-
 
 def sum(opentilelist):
     def add(x,y): return x+y
@@ -17,13 +18,13 @@ def get_direction(x,y, xmpplogger):
         dist, direction = E
         return board.passable(board.rel(direction))
 
-    for e in board.board:
-        xmpplogger.warning(e)
+    #for e in board.board:
+    #    xmpplogger.warning(e)
 
     x1, y1 = board.me()
     xdir = x - x1
     ydir = y - y1
-    xmpplogger.warning("%s / %s" % (xdir, ydir))
+    #xmpplogger.warning("%s / %s" % (xdir, ydir))
     
     pref = []
     if xdir>0:
@@ -36,7 +37,7 @@ def get_direction(x,y, xmpplogger):
     else:
         pref.append((abs(ydir),tron.WEST))
     
-    xmpplogger.warning(pref)
+    #xmpplogger.warning(pref)
     
     filtered_pref = filter(ispassable, pref)
     if len(filtered_pref)>0:
@@ -69,22 +70,26 @@ def which_move(board, xmpplogger):
     
     # GOAL #3: Optimize filling the rest of the space!
     
-    xmpplogger.warning("Deciding to go: %s" % get_direction(avg_x, avg_y,xmpplogger))
+    #xmpplogger.warning("Deciding to go: %s" % get_direction(avg_x, avg_y,xmpplogger))
 
     return get_direction(avg_x, avg_y,xmpplogger)
 
 if __name__=="__main__":
-    # Get a Jabber handler.
-    jh = xmpplogger.JabberHandler()
-    # Set it's formatter to the jabber formatter.
-    jh.setFormatter(logging.Formatter("%(message)s"))
-    # Attach to the root logger.
-    r = logging.getLogger()
-    r.addHandler(jh)
-    # Set the root logger to log all DEBUG messages and above.
-    r.setLevel(logging.WARNING)
+    if gethostname()=="aura.local":
+        from cerebron import xmpplogger
+        # Get a Jabber handler.
+        jh = xmpplogger.JabberHandler()
+        # Set it's formatter to the jabber formatter.
+        jh.setFormatter(logging.Formatter("%(message)s"))
+        # Attach to the root logger.
+        r = logging.getLogger()
+        r.addHandler(jh)
+        # Set the root logger to log all DEBUG messages and above.
+        r.setLevel(logging.WARNING)
     
-    r.debug("Game has started!")
+        r.debug("Game has started!")
+    else:
+        r = None
     
     for board in tron.Board.generate():
         tron.move(which_move(board, r))
