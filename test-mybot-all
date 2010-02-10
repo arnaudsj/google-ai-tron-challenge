@@ -1,0 +1,5 @@
+#!/bin/bash
+tests/test-mybot-vs-chaser | tail -n 1
+tests/test-mybot-vs-random | tail -n 1
+tests/test-mybot-vs-runaway | tail -n 1
+tests/test-mybot-vs-wallhugger | tail -n 1

@@ -1,11 +1,11 @@
 #!/usr/bin/env python2.6
 
 """Template for your tron bot"""
-
-import tron
 import random
 import logging
-import xmpplogger
+
+from cerebron import tron
+from cerebron import xmpplogger
 
 
 def sum(opentilelist):
@@ -16,6 +16,9 @@ def get_direction(x,y, xmpplogger):
     def ispassable(E): 
         dist, direction = E
         return board.passable(board.rel(direction))
+
+    for e in board.board:
+        xmpplogger.warning(e)
 
     x1, y1 = board.me()
     xdir = x - x1
