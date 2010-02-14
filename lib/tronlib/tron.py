@@ -86,7 +86,8 @@ class Board(object):
                 invalid_input("unexpected EOF reading board")
             lines.append(line)
 
-        board = [line[:width] for line in lines]
+        board = [[e for e in line[:width]] for line in lines]
+        #print board
 
         if len(board) != height or any(len(board[y]) != width for y in xrange(height)):
             invalid_input("malformed board")
@@ -139,6 +140,11 @@ class Board(object):
         if not 0 <= x < self.width or not 0 <= y < self.height:
             return WALL
         return self.board[y][x]
+        
+    def __setitem__(self, coords, value):
+        y, x = coords
+        self.board[y][x] = value
+        return True
 
     def me(self):
         """Finds your position on the board.
