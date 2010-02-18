@@ -1,2 +1,0 @@
-#!/bin/bash
-java -jar engine/Tron.jar maps/u.txt "python src/MyTronBot.py" "java -jar example_bots/RunAway.jar"
