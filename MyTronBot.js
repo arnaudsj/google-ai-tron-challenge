@@ -1,6 +1,7 @@
 // Template for your tron bot
 var sys = require("sys");
 var tron = require('./lib/tron');
+var time = require('./lib/time');
 
 var DEBUG = false;
 
@@ -23,9 +24,6 @@ function negascout(node, depth, α, β)
     return α
 */
 
-function randomChoice(a) {
-    return a[Math.floor(Math.random() * a.length)];
-}
 
 var gnode = function(stateb) {    
     this.stateboard = new tron.stateboard(stateb);
@@ -92,20 +90,35 @@ function negamax(node, depth) {
     return {"alpha":alpha, "move": best_move};
 }
 
+/*
+var StateBoard = {"w":board.width, "h":board.height, "state": board.state,
+     "me": board.me(), "them": board.them()}  
+var RootNode = new gnode(StateBoard);
+
+var negamax_var = negamax(RootNode, 3);
+//if (DEBUG) sys.puts(best_move);
+
+var my_best_move = (negamax_var.move==0||negamax_var.move==null)?randomChoice(RootNode.stateboard.moves("me")):negamax_var.move;
+
+if (DEBUG) sys.puts("NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4");
+sys.puts(my_best_move);
+*/
+
+function randomChoice(a) {
+    return a[Math.floor(Math.random() * a.length)];
+}
+ 
 function which_move(board) {
-    var StateBoard = {"w":board.width, "h":board.height, "state": board.state,
-         "me": board.me(), "them": board.them()}  
-    var RootNode = new gnode(StateBoard);
     
-    var negamax_var = negamax(RootNode, 4);
-    //if (DEBUG) sys.puts(best_move);
-
-    var my_best_move = (negamax_var.move==0||negamax_var.move==null)?randomChoice(RootNode.stateboard.moves("me")):negamax_var.move;
-
-    if (DEBUG) sys.puts("NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4");
-    sys.puts(my_best_move);
     
-
+    //board.print();
+    
+    time.time.start('thinking my move!');
+    var my_best_move = randomChoice(board.possible_moves());
+    time.time.stop('thinking my move!');
+    //time.time.report();
+    
+    return my_best_move;
 }
 
 tron.play(which_move);
